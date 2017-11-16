@@ -17,15 +17,6 @@ BLOCKED_UUID_ = ""
 MIFAREReader = MFRC522.MFRC522()
 
 
-def create_uuid(uid):
-    return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
-
-
-def build_url(uuid):
-    quoted_uuid_string = urllib2.quote(uuid)
-    return HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
-
-
 def main():
     # This loop keeps checking for chips. If one is near it will get the UID and authenticate
     global BLOCKED_UUID_
@@ -80,6 +71,14 @@ def main():
             else:
                 print("Authentication error")
 
+
+def create_uuid(uid):
+    return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
+
+
+def build_url(uuid):
+    quoted_uuid_string = urllib2.quote(uuid)
+    return HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
 
 if __name__ == '__main__':
     main()
