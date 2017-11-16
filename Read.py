@@ -47,11 +47,13 @@ while continue_reading:
     # If we have the UID, continue
     if status == MIFAREReader.MI_OK:
         uuid_string = str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
+        quoted_uuid_string = urllib2.quote(uuid_string)
         # Print UID
         print("Card read UID: " + str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
-        #urllib2.Request("%s?uuid=" % HTTP_LOCALHOST_, uuid_string)
-        url = "%s?uuid=" % HTTP_LOCALHOST_, uuid_string
-        print(url)
+        string = HTTP_LOCALHOST_ + "?uuid=" + quoted_uuid_string
+        print(string)
+        #urllib2.Request(string)
+
 
         # This is the default key for authentication
         key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
