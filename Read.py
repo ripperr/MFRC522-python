@@ -4,7 +4,7 @@
 import RPi.GPIO as GPIO
 import MFRC522
 import signal
-import urllib2.request
+import urllib2
 
 HTTP_LOCALHOST_ = "http://localhost:8080"
 HAS_BEEN_BLOCKED_ = False
@@ -49,7 +49,7 @@ while continue_reading:
         uuid_string = str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
         # Print UID
         print("Card read UID: " + str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
-        # urllib.request.Request("%s?uuid=" % HTTP_LOCALHOST_, uuid_string)
+        #urllib2.Request("%s?uuid=" % HTTP_LOCALHOST_, uuid_string)
         url = "%s?uuid=" % HTTP_LOCALHOST_, uuid_string
         print(url)
 
