@@ -41,9 +41,8 @@ def create_uuid():
 
 
 def build_url():
-    global uuid_url
     quoted_uuid_string = urllib2.quote(uuid)
-    uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+    return HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
 
 
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
@@ -67,7 +66,7 @@ while continue_reading:
 
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
-        build_url()
+        uuid_url = build_url()
         try:
             print("time since epoch: " + str(time_since_epoch))
             print("cooldown time: " + str(COOLDOWN_TIME_))
