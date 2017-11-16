@@ -66,9 +66,9 @@ while continue_reading:
                 BLOCKED_UUID_ = uuid_url
                 urllib2.Request(uuid_url)
             else:
-                print "In cooldown time..."
+                print("In cooldown time...")
         except Exception:
-            print "Can't call url: " + uuid_url
+            print("Can't call url: " + uuid_url)
 
         # This is the default key for authentication
         key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
