@@ -60,9 +60,10 @@ while continue_reading:
         uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
         print(uuid_url)
         time_since_epoch = int(time.time())
-        if (time_since_epoch - COOLDOWN_TIME_ > 10) or (uuid != BLOCKED_UUID_):
-            print("time since epoch:" + str(time_since_epoch))
-            print("cooldown time:" + str(COOLDOWN_TIME_))
+        difference_in_time = time_since_epoch - COOLDOWN_TIME_
+        if (difference_in_time > 10) or (uuid != BLOCKED_UUID_):
+            print("time since epoch: " + str(time_since_epoch))
+            print("cooldown time: " + str(COOLDOWN_TIME_))
             print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
 
             COOLDOWN_TIME_ = time_since_epoch
