@@ -4,7 +4,7 @@
 import RPi.GPIO as GPIO
 import MFRC522
 import signal
-import urllib.request
+import urllib2.request
 
 HTTP_LOCALHOST_ = "http://localhost:8080"
 HAS_BEEN_BLOCKED_ = False
