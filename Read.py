@@ -61,9 +61,9 @@ while continue_reading:
         print(uuid_url)
         time_since_epoch = int(time.time())
         if (time_since_epoch - COOLDOWN_TIME_ > 10) or (uuid != BLOCKED_UUID_):
-            print("time since epoch:" + time_since_epoch)
-            print("cooldown time:" + COOLDOWN_TIME_)
-            print("difference: " + (time_since_epoch - COOLDOWN_TIME_))
+            print("time since epoch:" + str(time_since_epoch))
+            print("cooldown time:" + str(COOLDOWN_TIME_))
+            print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
 
             COOLDOWN_TIME_ = time_since_epoch
             BLOCKED_UUID_ = uuid_url
