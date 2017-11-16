@@ -2,12 +2,14 @@
 # -*- coding: utf8 -*-
 
 import RPi.GPIO as GPIO
+import time
+
 import MFRC522
 import signal
 import urllib2
 
 HTTP_LOCALHOST_ = "http://localhost:8080"
-HAS_BEEN_BLOCKED_ = False
+COOLDOWN_TIME_ = 0.0
 BLOCKED_UUID_ = ""
 
 continue_reading = True
@@ -31,6 +33,11 @@ MIFAREReader = MFRC522.MFRC522()
 print("Welcome to the MFRC522 data read example")
 print("Press Ctrl-C to stop.")
 
+
+def create_uuid():
+    return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
+
+
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
 
@@ -46,14 +53,22 @@ while continue_reading:
 
     # If we have the UID, continue
     if status == MIFAREReader.MI_OK:
-        uuid_string = str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
-        quoted_uuid_string = urllib2.quote(uuid_string)
+        uuid = create_uuid()
         # Print UID
-        print("Card read UID: " + str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3]))
-        string = HTTP_LOCALHOST_ + "?uuid=" + quoted_uuid_string
-        print(string)
-        #urllib2.Request(string)
-
+        print("Card read UID: " + uuid)
+        quoted_uuid_string = urllib2.quote(uuid)
+        uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+        print(uuid_url)
+        try:
+            time_since_epoch = int(time.time())
+            if (time_since_epoch - COOLDOWN_TIME_ > 10) or (uuid != BLOCKED_UUID_):
+                COOLDOWN_TIME_ = time_since_epoch
+                BLOCKED_UUID_ = uuid_url
+                urllib2.Request(uuid_url)
+            else:
+                print "In cooldown time..."
+        except Exception:
+            print "Can't call url: " + uuid_url
 
         # This is the default key for authentication
         key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
