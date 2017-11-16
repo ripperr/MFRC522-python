@@ -9,16 +9,19 @@ import urllib2
 
 # Create an object of the class MFRC522
 MIFAREReader = MFRC522.MFRC522()
+COOLDOWN_SECONDS = 10
+
+HTTP_LOCALHOST_ = "http://localhost:8080"
+COOLDOWN_TIME_ = 0.0
+BLOCKED_UUID_ = ""
 
 
 def main():
     # This loop keeps checking for chips. If one is near it will get the UID and authenticate
-    COOLDOWN_SECONDS = 10
 
-    HTTP_LOCALHOST_ = "http://localhost:8080"
-    COOLDOWN_TIME_ = 0.0
-    BLOCKED_UUID_ = ""
     while True:
+        global COOLDOWN_TIME_
+        global BLOCKED_UUID_
 
         # Scan for cards
         (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
