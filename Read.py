@@ -59,14 +59,15 @@ while continue_reading:
         quoted_uuid_string = urllib2.quote(uuid)
         uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
         print(uuid_url)
+        time_since_epoch = int(time.time())
+        if (time_since_epoch - COOLDOWN_TIME_ > 10) or (uuid != BLOCKED_UUID_):
+            COOLDOWN_TIME_ = time_since_epoch
+            BLOCKED_UUID_ = uuid_url
+            urllib2.Request(uuid_url)
+        else:
+            print("In cooldown time...")
         try:
-            time_since_epoch = int(time.time())
-            if (time_since_epoch - COOLDOWN_TIME_ > 10) or (uuid != BLOCKED_UUID_):
-                COOLDOWN_TIME_ = time_since_epoch
-                BLOCKED_UUID_ = uuid_url
-                urllib2.Request(uuid_url)
-            else:
-                print("In cooldown time...")
+            print("meuh")
         except Exception:
             print("Can't call url: " + uuid_url)
 
