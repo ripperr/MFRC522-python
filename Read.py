@@ -8,6 +8,8 @@ import MFRC522
 import signal
 import urllib2
 
+COOLDOWN_SECONDS = 10
+
 HTTP_LOCALHOST_ = "http://localhost:8080"
 COOLDOWN_TIME_ = 0.0
 BLOCKED_UUID_ = ""
@@ -38,6 +40,12 @@ def create_uuid():
     return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
 
 
+def buildUrl():
+    global uuid_url
+    quoted_uuid_string = urllib2.quote(uuid)
+    uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+
+
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
 
@@ -56,38 +64,40 @@ while continue_reading:
         uuid = create_uuid()
         # Print UID
         print("Card read UID: " + uuid)
-        quoted_uuid_string = urllib2.quote(uuid)
-        uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
-        print(uuid_url)
+
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
-        if (difference_in_time > 10) or (uuid != BLOCKED_UUID_):
-            print("time since epoch: " + str(time_since_epoch))
-            print("cooldown time: " + str(COOLDOWN_TIME_))
-            print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
-
-            COOLDOWN_TIME_ = time_since_epoch
-            BLOCKED_UUID_ = uuid
-            urllib2.Request(uuid_url)
-        else:
-            print("In cooldown time... " + str(difference_in_time) + " seconds remaining")
+        buildUrl()
         try:
-            print("meuh")
+            if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
+
+                print("time since epoch: " + str(time_since_epoch))
+                print("cooldown time: " + str(COOLDOWN_TIME_))
+                print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
+
+                print(uuid_url)
+
+                COOLDOWN_TIME_ = time_since_epoch
+                BLOCKED_UUID_ = uuid
+                urllib2.Request(uuid_url)
+            else:
+                print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
+
         except Exception:
             print("Can't call url: " + uuid_url)
 
-        # This is the default key for authentication
-        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+    # This is the default key for authentication
+    key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
-        # Select the scanned tag
-        MIFAREReader.MFRC522_SelectTag(uid)
+    # Select the scanned tag
+    MIFAREReader.MFRC522_SelectTag(uid)
 
-        # Authenticate
-        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+    # Authenticate
+    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
 
-        # Check if authenticated
-        if status == MIFAREReader.MI_OK:
-            MIFAREReader.MFRC522_Read(8)
-            MIFAREReader.MFRC522_StopCrypto1()
-        else:
-            print("Authentication error")
+    # Check if authenticated
+    if status == MIFAREReader.MI_OK:
+        MIFAREReader.MFRC522_Read(8)
+        MIFAREReader.MFRC522_StopCrypto1()
+    else:
+        print("Authentication error")
