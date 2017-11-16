@@ -10,7 +10,7 @@ import urllib2
 
 COOLDOWN_SECONDS = 10
 
-HTTP_LOCALHOST_ = "http://localhost:8080"
+URL = "http://localhost:8080"
 COOLDOWN_TIME_ = 0.0
 BLOCKED_UUID_ = ""
 
@@ -42,7 +42,7 @@ def create_uuid():
 
 def build_url():
     quoted_uuid_string = urllib2.quote(uuid)
-    return HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+    return URL + "?rfid=" + quoted_uuid_string
 
 
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
