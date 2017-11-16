@@ -40,12 +40,6 @@ def create_uuid():
     return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
 
 
-def buildUrl():
-    global uuid_url
-    quoted_uuid_string = urllib2.quote(uuid)
-    uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
-
-
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
 
@@ -67,7 +61,8 @@ while continue_reading:
 
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
-        buildUrl()
+        quoted_uuid_string = urllib2.quote(uuid)
+        uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
         try:
             if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
 
