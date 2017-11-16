@@ -67,10 +67,10 @@ while continue_reading:
             print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
 
             COOLDOWN_TIME_ = time_since_epoch
-            BLOCKED_UUID_ = uuid_url
+            BLOCKED_UUID_ = uuid
             urllib2.Request(uuid_url)
         else:
-            print("In cooldown time...")
+            print("In cooldown time... " + str(difference_in_time) + " seconds remaining")
         try:
             print("meuh")
         except Exception:
