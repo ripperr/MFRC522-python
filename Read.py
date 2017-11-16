@@ -61,38 +61,36 @@ while continue_reading:
 
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
-        quoted_uuid_string = urllib2.quote(uuid)
-        uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+        if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
+
+            print("time since epoch: " + str(time_since_epoch))
+            print("cooldown time: " + str(COOLDOWN_TIME_))
+            print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
+            quoted_uuid_string = urllib2.quote(uuid)
+            uuid_url = HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+            print(uuid_url)
+            COOLDOWN_TIME_ = time_since_epoch
+            BLOCKED_UUID_ = uuid
+            urllib2.Request(uuid_url)
+        else:
+            print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
         try:
-            if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
-
-                print("time since epoch: " + str(time_since_epoch))
-                print("cooldown time: " + str(COOLDOWN_TIME_))
-                print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
-
-                print(uuid_url)
-
-                COOLDOWN_TIME_ = time_since_epoch
-                BLOCKED_UUID_ = uuid
-                urllib2.Request(uuid_url)
-            else:
-                print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
-
+            print("meuh")
         except Exception:
             print("Can't call url: " + uuid_url)
 
-    # This is the default key for authentication
-    key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+        # This is the default key for authentication
+        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
-    # Select the scanned tag
-    MIFAREReader.MFRC522_SelectTag(uid)
+        # Select the scanned tag
+        MIFAREReader.MFRC522_SelectTag(uid)
 
-    # Authenticate
-    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+        # Authenticate
+        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
 
-    # Check if authenticated
-    if status == MIFAREReader.MI_OK:
-        MIFAREReader.MFRC522_Read(8)
-        MIFAREReader.MFRC522_StopCrypto1()
-    else:
-        print("Authentication error")
+        # Check if authenticated
+        if status == MIFAREReader.MI_OK:
+            MIFAREReader.MFRC522_Read(8)
+            MIFAREReader.MFRC522_StopCrypto1()
+        else:
+            print("Authentication error")
