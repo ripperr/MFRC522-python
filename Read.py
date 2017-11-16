@@ -38,7 +38,7 @@ def main():
 
             time_since_epoch = int(time.time())
             difference_in_time = time_since_epoch - COOLDOWN_TIME_
-            uuid_url = build_url(uuid)
+            uuid_url = build_url(HTTP_LOCALHOST_, uuid)
             try:
                 print("time since epoch: " + str(time_since_epoch))
                 print("cooldown time: " + str(COOLDOWN_TIME_))
@@ -74,9 +74,10 @@ def create_uuid(uid):
     return str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
 
 
-def build_url(uuid):
+def build_url(url, uuid):
     quoted_uuid_string = urllib2.quote(uuid)
-    return HTTP_LOCALHOST_ + "?rfid=" + quoted_uuid_string
+    return url + "?rfid=" + quoted_uuid_string
+
 
 if __name__ == '__main__':
     main()
