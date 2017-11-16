@@ -69,13 +69,13 @@ while continue_reading:
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
         build_url()
         try:
+            print("time since epoch: " + str(time_since_epoch))
+            print("cooldown time: " + str(COOLDOWN_TIME_))
+            print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
             if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
-                print("time since epoch: " + str(time_since_epoch))
-                print("cooldown time: " + str(COOLDOWN_TIME_))
-                print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
-                print(uuid_url)
                 COOLDOWN_TIME_ = time_since_epoch
                 BLOCKED_UUID_ = uuid
+                print("Calling url: " + uuid_url)
                 urllib2.Request(uuid_url)
             else:
                 print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
