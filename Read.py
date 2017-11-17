@@ -7,6 +7,7 @@ import time
 import MFRC522
 import signal
 import urllib2
+import urllib
 
 COOLDOWN_SECONDS = 10
 
@@ -41,8 +42,21 @@ def create_uuid():
 
 
 def build_url():
-    quoted_uuid_string = urllib2.quote(uuid)
-    return URL + "?rfid=" + quoted_uuid_string
+    return URL
+
+
+def get_post_parameters():
+    data_to_post = {'deviceId': 1, 'rfidTag': uuid}
+    return urllib.urlencode(data_to_post)
+
+
+def call_backend():
+    global COOLDOWN_TIME_, BLOCKED_UUID_
+    COOLDOWN_TIME_ = time_since_epoch
+    BLOCKED_UUID_ = uuid
+    data_to_post = get_post_parameters()
+    print("Calling url: " + uuid_url)
+    urllib2.Request(uuid_url, data_to_post)
 
 
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
@@ -67,15 +81,12 @@ while continue_reading:
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
         uuid_url = build_url()
+        print("time since epoch: " + str(time_since_epoch))
+        print("cooldown time: " + str(COOLDOWN_TIME_))
+        print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
         try:
-            print("time since epoch: " + str(time_since_epoch))
-            print("cooldown time: " + str(COOLDOWN_TIME_))
-            print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
             if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
-                COOLDOWN_TIME_ = time_since_epoch
-                BLOCKED_UUID_ = uuid
-                print("Calling url: " + uuid_url)
-                urllib2.Request(uuid_url)
+                call_backend()
             else:
                 print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
         except Exception:
