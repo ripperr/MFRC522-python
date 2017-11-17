@@ -81,11 +81,9 @@ while continue_reading:
         time_since_epoch = int(time.time())
         difference_in_time = time_since_epoch - COOLDOWN_TIME_
         uuid_url = build_url()
-        print("time since epoch: " + str(time_since_epoch))
-        print("cooldown time: " + str(COOLDOWN_TIME_))
-        print("difference: " + str((time_since_epoch - COOLDOWN_TIME_)))
         try:
             if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
+                print("Seconds since latest logon: " + str((time_since_epoch - COOLDOWN_TIME_)))
                 call_backend()
             else:
                 print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
