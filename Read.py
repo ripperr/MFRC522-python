@@ -45,16 +45,16 @@ def build_url():
     return URL
 
 
-def get_post_parameters():
+def get_post_parameters(uuid):
     data_to_post = {'deviceId': 1, 'rfidTag': uuid}
     return urllib.urlencode(data_to_post)
 
 
-def call_backend():
+def call_backend(time_since_epoch, uuid, uuid_url):
     global COOLDOWN_TIME_, BLOCKED_UUID_
     COOLDOWN_TIME_ = time_since_epoch
     BLOCKED_UUID_ = uuid
-    data_to_post = get_post_parameters()
+    data_to_post = get_post_parameters(uuid)
     print("Calling url: " + uuid_url)
     urllib2.Request(uuid_url, data_to_post)
 
@@ -84,7 +84,7 @@ while continue_reading:
         try:
             if (difference_in_time > COOLDOWN_SECONDS) or (uuid != BLOCKED_UUID_):
                 print("Seconds since latest logon: " + str((time_since_epoch - COOLDOWN_TIME_)))
-                call_backend()
+                call_backend(time_since_epoch, uuid, uuid_url)
             else:
                 print("In cooldown time... " + str(COOLDOWN_SECONDS - difference_in_time) + " seconds remaining")
         except Exception:
