@@ -9,9 +9,11 @@ import signal
 import urllib2
 import urllib
 
+BASE_URL_ = "http://localhost:8080"
+
 COOLDOWN_SECONDS = 10
 
-URL = "http://localhost:8080"
+URL = "%s/rfid" % BASE_URL_
 COOLDOWN_TIME_ = 0.0
 BLOCKED_UUID_ = ""
 
